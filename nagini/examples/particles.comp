@@ -1,0 +1,42 @@
+#version 450
+
+#define PARTICLES_PER_GROUP 64
+layout(local_size_x = PARTICLES_PER_GROUP) in;
+
+layout(std140, set = 0, binding = 0) uniform SimData {
+    vec3 wind;
+    vec3 emitterMin;
+    vec3 emitterMax;
+    float dt;
+};
+
+struct Particle {
+    vec3 position;
+    vec3 velocity;
+};
+layout(std430, set = 0, binding = 0) buffer SrcParticles {
+    Particle particles[];
+} srcParticles;
+layout(std430, set = 0, binding = 1) buffer DstParticles {
+    Particle particles[];
+} dstParticles;
+
+void main() {
+    uint index = gl_GlobalInvocationID.x;
+
+    // Do the physics
+    Particle p = srcParticles[index];
+    p.velocity += wind * dt;
+    p.position += p.velocity * dt;
+
+    // Clamp position into the boundaries
+    if (p.position.x < emitterMin.x) p.position.x = emitterMax.x;
+    if (p.position.y < emitterMin.y) p.position.y = emitterMax.y;
+    if (p.position.z < emitterMin.z) p.position.z = emitterMax.z;
+    if (p.position.x > emitterMax.x) p.position.x = emitterMin.x;
+    if (p.position.y > emitterMax.y) p.position.y = emitterMin.y;
+    if (p.position.z > emitterMax.z) p.position.z = emitterMin.z;
+
+    // Save the results
+    dstParticles[index] = p;
+}

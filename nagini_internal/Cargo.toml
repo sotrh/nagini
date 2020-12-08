@@ -1,18 +1,16 @@
 [package]
-name = "nagini"
+name = "nagini_internal"
 version = "0.1.0"
 authors = ["Ben Hansen <bhbenjaminhansen@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+anyhow = "1.0"
 thiserror = "1.0"
 naga = "0.2"
-nagini_internal = { version = "=0.1.0", path = "../nagini_internal"}
-nagini_derive = { version = "=0.1.0", path = "../nagini_derive"}
+serde = { version = "1.0", features = ["derive"]}
+ron = "0.6"
 
 [dev-dependencies]
-anyhow = "1.0"
-futures = "0.3"
-winit = "0.23"
 wgpu = "0.6"
 wgpu-subscriber = "0.1"

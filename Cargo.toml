@@ -1,2 +1,2 @@
 [workspace]
-members = ["nagini", "nagini_derive", "nagini_types"]
+members = ["nagini", "nagini_derive", "nagini_internal"]
